@@ -1,0 +1,185 @@
+openapi: "3.0.2"
+info:
+  title: Projeto Pagamento
+  version: "1.0"
+servers:
+  - url: http://localhost:3000/api/v1
+  - url: http://localhost:3000/api/v1
+paths:
+  #user
+  /user/auth:
+    post:
+      summary: Retorna o token para autenticação.
+      description: Infoma o token para autenticação o tempo de expiração e qual o tipo de utilização
+      security: []
+      tags:
+        - "User"
+      responses:
+        "200":
+          description: retorna um token para autenticação
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Auth"
+ #checkout
+  /checkout:
+    post:
+      summary: "Cria um pagamento de para um Pedido"
+      tags:
+        - "Checkout"
+      requestBody:
+        $ref: '#/components/requestBodies/CheckoutBody'
+      responses:
+        "201":
+          description: "Requisição para pagamento realizada com sucesso."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_method_id:
+                    type: number
+                    format: integer
+                    example: 1
+                  pedido_id:
+                    type: number
+                    format: integer
+                    example: 1
+                  status:
+                      type: number
+                      format: integer
+                      example: 1
+                  uuid:
+                      type: string
+                      example: '0115b81d-067e-4b62-a4c3-253e1b218712'
+                  cartao:
+                    $ref: '#/components/schemas/Cartao'
+  /checkout/hook/{pedido_id}:
+    put:
+      summary: "Executa o pagamento e recebe um retorno de pagamento do gateway de pagamento escolhido"
+      tags:
+        - "Checkout"
+      parameters:
+        - in: path
+          name: pedido_id
+          schema:
+            type: integer
+          required: true
+          description: ID do pedido
+      responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Checkout"
+  /checkout/{pedidoId}/status:
+    get:
+        summary: Recupera o status de pagamento do pedido pelo ID do pedido
+        tags:
+          - "Checkout"
+        parameters:
+          - in: path
+            name: pedidoId
+            schema:
+              type: integer
+            required: true
+            description: ID do pedido
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Checkout"
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  requestBodies:
+    CheckoutBody:
+      description: "Payload para cadastro ou atualização do checkout"
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              payment_method_id:
+                type: number
+                format: integer
+                example: 1
+              pedido_id:
+                type: number
+                format: integer
+                example: 1
+              payer:
+                $ref: '#/components/schemas/Payer'
+  schemas:
+    Auth:
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjYsImV4cCI6MTY5NzkyMjAwNjA1MywibmFtZSI6IkJydW5vIEJsYXV6aXVzIHNjaHVpbmR0IiwiZW1haWwiOiJicnVub2JsYXV6aXVzQGdtYWlsLmNvbSJ9.QVh-6NZB0gKTgiS2xBKNdgau2ZS0dOqyCnxNWFxAGW8
+        expires_in:
+          type: number
+          example: 3600
+        scope:
+          type: string
+          example: customScope
+        token_type:
+          type: string
+          example: Bearer
+    Payer: 
+      properties:
+        name:
+          type: string
+          example: 'Jhon Doe'
+        email:
+          type: string
+          example : jhondoe@test.com
+        document:
+          type: string
+          example: '317.594.877-40'
+    Cartao:
+      properties:
+        number:
+          type: integer
+          example: '4171-9043-4466-6522'
+        cvv:
+          type: integer
+          example: 171
+        expiration_date:
+          type: string
+          format: date
+        payer:
+          $ref: '#/components/schemas/Payer'
+    Checkout:
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        pedido:
+          $ref: "#/components/schemas/Pedidos"
+        cliente:
+          $ref: "#/components/schemas/cliente"
+        status_id:
+          type: integer
+          example: 1
+        created:
+          type: string
+          format: datetime
+        modified:
+          type: string
+          format: datetime
+      required:
+        - "status_id"
+        - "uuid"
+
+security:
+  - BearerAuth: [JWT]

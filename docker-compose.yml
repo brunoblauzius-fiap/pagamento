@@ -1,0 +1,39 @@
+version: "3.8"
+
+
+services:
+  db:
+    image: mongo:5.0.2
+    restart: unless-stopped
+    container_name: db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - "27020:27017"
+    
+
+  web:
+    container_name: service-pagamento
+    build:
+      context: .
+    volumes:
+      - ".:/app"
+      - "/node_modules"
+    ports:
+      - 3000:3000
+    environment:
+      MP_URL: ${MP_URL}
+      MP_CLIENT_ID: ${MP_CLIENT_ID}
+      MP_CLIENT_SECRET: ${MP_CLIENT_SECRET}
+      MP_NOTIFICATION_URL: ${MP_NOTIFICATION_URL}
+    depends_on:
+      - db
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+        
+volumes:
+   mongo-data:
