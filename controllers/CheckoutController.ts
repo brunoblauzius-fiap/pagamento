@@ -9,16 +9,19 @@ import { CheckoutPagamento } from '../cases/checkoutPagamento';
 import { StatusCheckout } from '../entity/enum/statusCheckout';
 import BadRequestError from '../application/exception/BadRequestError';
 import ResponseErrors from '../adapters/ResponseErrors';
+import PedidoService from '../external/Services/PedidoService';
 
 
 class CheckoutController {
 
     private repository : CheckoutPagamentoRepository;
     private metodoPagamento: IPaymentMethods;
+    private _pedidoService: PedidoService;
 
     constructor(readonly dbconnection: IDataBase) {
         this.metodoPagamento = new MPagamento();
         this.repository = new CheckoutPagamentoRepository(dbconnection);
+        this._pedidoService= new PedidoService();
     }
 
     /**
@@ -39,6 +42,7 @@ class CheckoutController {
                 this.metodoPagamento,
                 
             );
+            await this._pedidoService.setStatusPedido(checkout.pedido_id);
             response.status(HttpStatus.OK).json(ResponseAPI.data(checkout));
         } catch(err) {
             ResponseErrors.err(response, err);

@@ -2,9 +2,9 @@ import * as express from "express";
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import urls from './application/api/routes/urls';
-import Auth from "./application/api/middler/auth";
-import Logger from "./application/api/middler/logger";
-import userRouter from './application/api/routes/userRouter';
+//import Auth from "./application/api/middler/auth";
+//import Logger from "./application/api/middler/logger";
+///import userRouter from './application/api/routes/userRouter';
 import { IDataBase } from './interfaces/IDataBase';
 
 export default class Server{
@@ -31,7 +31,7 @@ export default class Server{
     }
 
     routes() {
-        this.app.use(Logger.log);
+        //this.app.use(Logger.log);
 
         this.app.route('/').get((req, res) => {
             res.json({
@@ -39,8 +39,8 @@ export default class Server{
                 'date' : '2024-03-18' 
             });
         });
-        this.app.use('/api/v1/', userRouter(this.dbconnection));
-        this.app.use(Auth.validate);
+        //this.app.use('/api/v1/', userRouter(this.dbconnection));
+        //this.app.use(Auth.validate);
         this.app.use("/", urls(this.dbconnection));
     }
 }
