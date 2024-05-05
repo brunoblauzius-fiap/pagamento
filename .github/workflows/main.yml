@@ -48,29 +48,24 @@ jobs:
         push: true
         tags: ${{ steps.login-ecr.outputs.registry }}/pagamento:${{ github.sha }}
         
-  # Test:
-  #   name: "Testes Unitários"
-  #   runs-on: ubuntu-latest
-  #   environment: projeto tech
-  #   needs: Build-and-Test
-  #   steps:
-  #   - uses: actions/checkout@v3
+  Test:
+    name: "Testes Unitários"
+    runs-on: ubuntu-latest
+    environment: projeto tech
+    needs: Build-and-Test
+    steps:
+    - uses: actions/checkout@v3
     
-  #   - name: "Construir imagem Docker"
-  #     run: docker-compose up -d
-  #     env:
-  #       MARIADB_HOST: ${{ vars.MARIADB_HOST }}
-  #       MARIADB_USER: ${{ vars.MARIADB_USER }}
-  #       MARIADB_DATABASE: ${{ vars.MARIADB_DATABASE }}
-  #       MARIADB_PASS: ${{ secrets.MARIADB_PASS }}
-  #       MARIADB_PORT: ${{ vars.MARIADB_PORT }}
-  #       MP_URL: ${{ vars.MP_URL }}
-  #       MP_CLIENT_SECRET: ${{ secrets.MP_CLIENT_SECRET }}
-  #       MP_CLIENT_ID: ${{ secrets.MP_CLIENT_ID }}
-  #       MP_NOTIFICATION_URL: ${{ vars.MP_NOTIFICATION_URL }}
+    # - name: "Construir imagem Docker"
+    #   run: docker-compose up -d
+    #   env:
+    #     MP_URL: ${{ vars.MP_URL }}
+    #     MP_CLIENT_SECRET: ${{ secrets.MP_CLIENT_SECRET }}
+    #     MP_CLIENT_ID: ${{ secrets.MP_CLIENT_ID }}
+    #     MP_NOTIFICATION_URL: ${{ vars.MP_NOTIFICATION_URL }}
         
-  #   - name: "Unit Test" 
-  #     run: docker run docker.io/library/entrega_web npm test
+    - name: "Unit Test" 
+      run: docker run ${{ steps.login-ecr.outputs.registry }}/pagamento:${{ github.sha }} npm test
    
   # sonarcloud:
   #   name: SonarCloud
