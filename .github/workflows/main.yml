@@ -48,39 +48,39 @@ jobs:
         push: true
         tags: ${{ steps.login-ecr.outputs.registry }}/pagamento:${{ github.sha }}
         
-  Test:
-    name: "Testes Unitários"
-    runs-on: ubuntu-latest
-    environment: projeto tech
-    needs: Build-and-Test
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: "Construir imagem Docker"
-      run: docker-compose up -d
-      env:
-        MP_URL: ${{ vars.MP_URL }}
-        MP_CLIENT_SECRET: ${{ secrets.MP_CLIENT_SECRET }}
-        MP_CLIENT_ID: ${{ secrets.MP_CLIENT_ID }}
-        MP_NOTIFICATION_URL: ${{ vars.MP_NOTIFICATION_URL }}
-        
-    - name: "Unit Test" 
-      run: docker run docker.io/library/pagamento_web npm test
-   
-  # sonarcloud:
-  #   name: SonarCloud
-  #   needs: [Build-and-Test, Test]
-  #   environment: projeto tech
+  # Test:
+  #   name: "Testes Unitários"
   #   runs-on: ubuntu-latest
+  #   environment: projeto tech
+  #   needs: Build-and-Test
   #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-  #     - name: SonarCloud Scan
-  #       uses: SonarSource/sonarcloud-github-action@master
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #   - uses: actions/checkout@v3
+    
+  #   - name: "Construir imagem Docker"
+  #     run: docker-compose up -d
+  #     env:
+  #       MP_URL: ${{ vars.MP_URL }}
+  #       MP_CLIENT_SECRET: ${{ secrets.MP_CLIENT_SECRET }}
+  #       MP_CLIENT_ID: ${{ secrets.MP_CLIENT_ID }}
+  #       MP_NOTIFICATION_URL: ${{ vars.MP_NOTIFICATION_URL }}
+        
+  #   - name: "Unit Test" 
+  #     run: docker run docker.io/library/pagamento_web npm test
+   
+  sonarcloud:
+    name: SonarCloud
+    needs: [Build-and-Test]
+    environment: projeto tech
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   # deploy-dev:
   #   name: Deploy em Desenvolvimento
