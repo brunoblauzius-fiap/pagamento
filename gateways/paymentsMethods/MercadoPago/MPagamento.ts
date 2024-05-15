@@ -54,7 +54,7 @@ class MPagamento implements IPaymentMethods {
     public store = async (checkout: Checkout) : Promise<Checkout> => {
         if (checkout.metodoPagamento.payment_method_id == PaymentoMethods.PIX) {
             return await this.pix(checkout);
-        } else if (checkout.metodoPagamento.payment_method_id == PaymentoMethods.CARD_DEBIT) {
+        } else if ([PaymentoMethods.CARD_DEBIT, PaymentoMethods.CARD_CREDIT].includes(checkout.metodoPagamento.payment_method_id)) {
             return await this.card(checkout);
         } else {
             throw new Error("Payment Method not implemented.");
@@ -83,7 +83,7 @@ class MPagamento implements IPaymentMethods {
         });
         
         if (response.status >= 300) {
-            throw new Error("Não foi possível realiza o pagamento na MP.");
+            throw new Error("Não foi possível realizar o pagamento na MP.");
         }
 
         this.response = await response.json();
