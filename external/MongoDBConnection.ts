@@ -16,7 +16,7 @@ class MongoDBConnection {
 
     async connect() {
         // try {
-        const url = `mongodb://root:1234567@db:27017/pagamento?authSource=admin`;//Colocar variavel env
+        const url = process.env.DB_MONGO;//Colocar variavel env
 
             mongoose.connect(url, {})
             .then(() => {
