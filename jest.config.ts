@@ -6,7 +6,6 @@ export default {
   transform: {
     '^.+\\.tsx?$': 'ts-jest', // Transforma arquivos TypeScript
   },
-  collectCoverage: true,
   coverageThreshold: {
     "global": {
       "branches": 80,
@@ -18,6 +17,7 @@ export default {
   testTimeout: 120000,
   verbose: true,
   // detectOpenHandles: true,
+  collectCoverage: true,
   //forceExit: true,
   transformIgnorePatterns: ['./node_modules'],
   setupFiles: ['dotenv/config'],
