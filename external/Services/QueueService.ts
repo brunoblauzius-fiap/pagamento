@@ -44,13 +44,13 @@ class QueueService {
     async confirmaPagamento (idPedido: any)    
     {
         const awsSQS = new AWSSQS();
-        await awsSQS.send(JSON.stringify(idPedido), process.env.AWS_SQS_CONFIRMACAO_PAGAMENTO);
+        await awsSQS.send(JSON.stringify({"idPedido" : idPedido}), process.env.AWS_SQS_CONFIRMACAO_PAGAMENTO);
         return true;
     }
     async cancelaPedido (idPedido: any)    
     {
         const awsSQS = new AWSSQS();
-        await awsSQS.send(JSON.stringify(idPedido), process.env.AWS_SQS_CANCELAR_PEDIDO);
+        await awsSQS.send(JSON.stringify({"idPedido" : idPedido}), process.env.AWS_SQS_CANCELAR_PEDIDO);
         return true;
     }
 }

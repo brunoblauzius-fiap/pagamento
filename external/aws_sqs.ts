@@ -1,4 +1,4 @@
-import { SQSClient, SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand } from "@npm i @aws-sdk/client-sqs";
+import { SQSClient, SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand } from "@aws-sdk/client-sqs";
 import { v4 as uuid } from 'uuid';
 
 class AWSSQS 
