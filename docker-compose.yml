@@ -40,17 +40,6 @@ services:
     ports:
       - "27020:27017"
     networks:
-      - microservice-fiap  
-
-  localstack-pagamento:
-    image: localstack/localstack
-    container_name: localstack-pagamento
-    ports:
-      - "4567:4566"  # Porta para acesso ao SQS
-    environment:
-      - SERVICES=sqs,iam
-      - DEFAULT_REGION=us-east-1
-    networks:
       - microservice-fiap      
 volumes:
    mongo-data:
