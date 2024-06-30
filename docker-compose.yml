@@ -41,6 +41,7 @@ services:
       - "27020:27017"
     networks:
       - microservice-fiap      
+
 volumes:
    mongo-data:
 
