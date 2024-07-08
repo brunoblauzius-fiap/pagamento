@@ -12,12 +12,18 @@ services:
     ports:
       - 3000:3000
     environment:
+      AWS_ACCESS_KEY_ID : ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_SQS_CANCELAR_PEDIDO : ${AWS_SQS_CANCELAR_PEDIDO}
+      AWS_SQS_CONFIRMACAO_PAGAMENTO : ${AWS_SQS_CONFIRMACAO_PAGAMENTO}
       MP_URL: ${MP_URL}
       MP_CLIENT_ID: ${MP_CLIENT_ID}
       MP_CLIENT_SECRET: ${MP_CLIENT_SECRET}
       MP_NOTIFICATION_URL: ${MP_NOTIFICATION_URL}
     depends_on:
       - mongo-db-pagamento
+    networks:
+        - microservice-fiap
     logging:
       driver: json-file
       options:
@@ -33,6 +39,12 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     ports:
       - "27020:27017"
-        
+    networks:
+      - microservice-fiap      
+
 volumes:
    mongo-data:
+
+networks:
+  microservice-fiap:
+    external: true

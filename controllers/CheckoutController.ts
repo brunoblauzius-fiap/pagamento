@@ -9,19 +9,19 @@ import { CheckoutPagamento } from '../cases/checkoutPagamento';
 import { StatusCheckout } from '../entity/enum/statusCheckout';
 import BadRequestError from '../application/exception/BadRequestError';
 import ResponseErrors from '../adapters/ResponseErrors';
-import PedidoService from '../external/Services/PedidoService';
+import QueueService from '../external/Services/QueueService';
 
 
 class CheckoutController {
 
     private repository : CheckoutPagamentoRepository;
     private metodoPagamento: IPaymentMethods;
-    private _pedidoService: PedidoService;
+    private _queueService: QueueService;
 
     constructor(readonly dbconnection: IDataBase) {
         this.metodoPagamento = new MPagamento();
         this.repository = new CheckoutPagamentoRepository(dbconnection);
-        this._pedidoService= new PedidoService();
+        this._queueService= new QueueService();
     }
 
     /**
@@ -42,9 +42,19 @@ class CheckoutController {
                 this.metodoPagamento,
                 
             );
-            await this._pedidoService.setStatusPedido(checkout.pedido_id);
-            response.status(HttpStatus.OK).json(ResponseAPI.data(checkout));
+            //await this._pedidoService.setStatusPedido(checkout.pedido_id);
+            if (checkout.pedido_id != null){
+                await this._queueService.confirmaPagamento(checkout.pedido_id);
+                response.status(HttpStatus.OK).json(ResponseAPI.data(checkout));
+            }
+            else{
+                await this._queueService.cancelaPedido(checkout.pedido_id);
+                response.status(HttpStatus.UNAUTHORIZED).json(ResponseAPI.data("Pagamento Não Autorizado"));
+
+            }
+            
         } catch(err) {
+            
             ResponseErrors.err(response, err);
         } 
     }
