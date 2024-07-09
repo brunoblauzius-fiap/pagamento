@@ -22,14 +22,14 @@ export class CheckoutPagamento {
         let idPedido = request.body.pedido_id;
        
         let metodoPagamento = null;
-            let payer = new Payer(
-                request.body.payer.name,
-                request.body.payer.email,
-                request.body.payer.document,
-            )
-            metodoPagamento = new Pix(
-                payer
-            )
+        let payer = new Payer(
+            request.body.payer.name,
+            request.body.payer.email,
+            request.body.payer.document,
+        )
+        metodoPagamento = new Pix(
+            payer
+        )
 
         let checkout = new Checkout(
             idPedido,
