@@ -50,7 +50,6 @@ class CheckoutController {
             else{
                 await this._queueService.cancelaPedido(checkout.pedido_id);
                 response.status(HttpStatus.UNAUTHORIZED).json(ResponseAPI.data("Pagamento Não Autorizado"));
-
             }
             
         } catch(err) {
