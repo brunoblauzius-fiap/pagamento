@@ -45,7 +45,7 @@ class AWSSQS
     async receive(queue: string) {
         const params = {
             QueueUrl: `${this.queueUrl}${queue}`,
-            MaxNumberOfMessages: 1, // Número máximo de mensagens a serem recebidas
+            MaxNumberOfMessages: 1,
         };
         try {
             const response = await this.sqsClient.send(
