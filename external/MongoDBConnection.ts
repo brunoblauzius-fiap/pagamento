@@ -21,7 +21,8 @@ class MongoDBConnection {
             mongoose.connect(
                 url, 
                 { 
-                    useNewUrlParser: true // adicionado na documentação AWS
+                    useNewUrlParser: true, // adicionado na documentação AWS
+                    useUnifiedTopology: true
                 }
             )
             .then(() => {
