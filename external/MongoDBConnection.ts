@@ -19,11 +19,7 @@ class MongoDBConnection {
         const url = process.env.DB_MONGO;//Colocar variavel env
 
             mongoose.connect(
-                url, 
-                { 
-                    useNewUrlParser: true, // adicionado na documentação AWS
-                    useUnifiedTopology: true
-                }
+                url,{}
             )
             .then(() => {
                 console.log('Conexão com o MongoDB estabelecida com sucesso!');
